@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.ActionBarTransparent" parent="Theme.StoryApp">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBarOverlay">false</item>
+        <item name="android:statusBarColor">@color/black</item>
+
+    </style>
+
+    <style name="roundedBottomCorners" parent="Theme.StoryApp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">30dp</item>
+        <item name="cornerSizeBottomRight">30dp</item>
+    </style>
+
+    <style name="roundedAllCorners" parent="Theme.StoryApp">
+        <item name="cornerFamily">cut</item>
+        <item name="colorAccent">@color/transparent</item>
+        <item name="colorBackgroundFloating">@color/transparent</item>
+        <item name="colorContainer">@color/transparent</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="roundedTopCorners" parent="Theme.StoryApp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">30dp</item>
+        <item name="cornerSizeTopRight">30dp</item>
+    </style>
+
+    <style name="roundedRightCorners" parent="Theme.StoryApp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">20dp</item>
+        <item name="cornerSizeBottomRight">20dp</item>
+    </style>
+
+    <style name="TextAppearance.App.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+</resources>
