@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.util.Patterns
 import android.view.KeyEvent
 import android.view.View
@@ -13,25 +12,20 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.ViewModelProvider
 import com.rifqiananda.storyapp.LoadingDialog
 import com.rifqiananda.storyapp.R
 import com.rifqiananda.storyapp.databinding.ActivityLoginBinding
 import com.rifqiananda.storyapp.helper.Constant
 import com.rifqiananda.storyapp.helper.PreferencesHelper
-import com.rifqiananda.storyapp.model.Login
-import com.rifqiananda.storyapp.networking.ApiRetrofit
 import com.rifqiananda.storyapp.ui.custom.MyButton
 import com.rifqiananda.storyapp.ui.custom.MyEditText
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.rifqiananda.storyapp.ui.view.LoginViewModel
 
 
 class LoginActivity : AppCompatActivity() {
 
     lateinit var sharedPref: PreferencesHelper
-
-    private val api by lazy { ApiRetrofit().endpoint }
 
     private lateinit var binding: ActivityLoginBinding
 
@@ -40,6 +34,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var myEditText: MyEditText
 
     private lateinit var myButton: MyButton
+
+    private lateinit var viewModel: LoginViewModel
 
     private var email: String = ""
     private var pass: String = ""
@@ -61,9 +57,11 @@ class LoginActivity : AppCompatActivity() {
         myEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 setMyButtonEnable()
             }
+
             override fun afterTextChanged(s: Editable) {
             }
         })
@@ -71,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
         binding.apply {
 
             etEmail.doOnTextChanged { text, start, before, count ->
-                if (Patterns.EMAIL_ADDRESS.matcher(etEmail.text.toString()).matches()){
+                if (Patterns.EMAIL_ADDRESS.matcher(etEmail.text.toString()).matches()) {
                     input1.error = null
                     input1.isErrorEnabled = false
                 } else input1.error = "The email you are using is not correct!"
@@ -88,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
                 email = etEmail.text.toString()
                 pass = etPassword.text.toString()
 
-                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     loginUser(email, pass)
                     closeKeyboard(etPassword)
                     loading.startLoading()
@@ -103,20 +101,18 @@ class LoginActivity : AppCompatActivity() {
             }
 
             btnLogin.setOnClickListener {
+
                 closeKeyboard(btnLogin)
                 email = etEmail.text.toString()
                 pass = etPassword.text.toString()
 
-                if (email.isEmpty()){
+                if (email.isEmpty()) {
                     input1.error = "Email cannot be empty!!"
-                }
-                else if (pass.isEmpty()){
+                } else if (pass.isEmpty()) {
                     input2.error = "Password cannot be empty!"
-                }
-                else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     input1.error = "The email you are using is not correct!"
-                }
-                else {
+                } else {
                     loading.startLoading()
                     loginUser(email, pass)
                 }
@@ -134,34 +130,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginUser(email: String, password: String) {
-        api.login(email, password).enqueue(object : Callback<Login> {
 
-            override fun onResponse(call: Call<Login>, response: Response<Login>) {
-                if (response.isSuccessful) {
-                    if (response.body()?.error == false) {
-                        loading.isDismiss()
+        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[LoginViewModel::class.java]
+        viewModel.login(email, password).observe(this) {
+            if (!it.error) {
+                loading.isDismiss()
 
-                        val body = response.body()!!
-                        val token = body.loginResult.token
-                        val name = body.loginResult.name
+                val token = it.loginResult.token
+                val name = it.loginResult.name
 
-                        saveSession(token, name)
+                saveSession(token, name)
 
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                        finish()
-                        //ini nanti dihapus
-                        showMessage("Login succeed!")
-                    }
-                } else {
-                    loading.isDismiss()
-                    showMessage(getString(R.string.login_failed))
-                }
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                finish()
+            } else {
+                loading.isDismiss()
+                showMessage(getString(R.string.login_failed))
             }
-
-            override fun onFailure(call: Call<Login>, t: Throwable) {
-                Log.e("Login Error:", "${t.message}")
-            }
-        })
+        }
     }
 
     private fun saveSession(token: String, name: String) {
@@ -178,7 +164,7 @@ class LoginActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.login_to_register_enter, R.anim.login_to_register_exit)
     }
 
-    private fun closeKeyboard(view: View){
+    private fun closeKeyboard(view: View) {
         val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }

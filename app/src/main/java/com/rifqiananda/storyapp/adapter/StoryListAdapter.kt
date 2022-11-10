@@ -11,6 +11,8 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.rifqiananda.storyapp.databinding.LayoutAdapterBinding
 import com.rifqiananda.storyapp.model.Story
@@ -42,10 +44,10 @@ class StoryListAdapter(val context: Context) : PagingDataAdapter<Story, StoryLis
                 Glide.with(context)
                     .load(data.photoUrl)
                     .transition(DrawableTransitionOptions.withCrossFade())
+                    .transform(CenterCrop(), RoundedCorners(60))
                     .into(ivPhoto)
 
                 tvName.text = data.name
-                tvDescription.text = data.description
 
                 val date = data.createdAt
                 val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
@@ -54,10 +56,10 @@ class StoryListAdapter(val context: Context) : PagingDataAdapter<Story, StoryLis
 
                 tvDate.text = newDate?.let { format2.format(it) }
 
-                btnDetail.setOnClickListener {
+                holder.itemView.setOnClickListener {
                     val optionsCompat: ActivityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            btnDetail.context as Activity,
+                            context as Activity,
                             Pair(ivPhoto, "photo")
                         )
                     onItemClick?.onClick(data, optionsCompat)
@@ -67,7 +69,7 @@ class StoryListAdapter(val context: Context) : PagingDataAdapter<Story, StoryLis
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
             override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
                 return oldItem == newItem
             }

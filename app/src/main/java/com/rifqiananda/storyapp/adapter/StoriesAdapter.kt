@@ -1,23 +1,18 @@
 package com.rifqiananda.storyapp.adapter
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.android.material.transition.platform.Hold
 import com.rifqiananda.storyapp.databinding.LayoutAdapterBinding
 import com.rifqiananda.storyapp.model.Story
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class StoriesAdapter(val context: Context) : RecyclerView.Adapter<StoriesAdapter.ViewHolder>() {
 
@@ -60,7 +55,6 @@ class StoriesAdapter(val context: Context) : RecyclerView.Adapter<StoriesAdapter
                 .into(ivPhoto)
 
             tvName.text = storiesData.name
-            tvDescription.text = storiesData.description
 
             val date = storiesData.createdAt
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
@@ -68,16 +62,6 @@ class StoriesAdapter(val context: Context) : RecyclerView.Adapter<StoriesAdapter
             val format2 = SimpleDateFormat("yyyy-MM-dd")
 
             tvDate.text = format2.format(newDate)
-
-            btnDetail.setOnClickListener {
-                val optionsCompat: ActivityOptionsCompat =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        btnDetail.context as Activity,
-                        Pair(ivPhoto, "photo")
-                    )
-                onItemClick?.onClick(storiesData, optionsCompat)
-
-            }
         }
     }
 

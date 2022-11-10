@@ -12,12 +12,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.rifqiananda.storyapp.LoadingDialog
 import com.rifqiananda.storyapp.databinding.ActivityCreateStoryBinding
 import com.rifqiananda.storyapp.helper.Constant
 import com.rifqiananda.storyapp.helper.PreferencesHelper
 import com.rifqiananda.storyapp.model.FileUploadResponse
 import com.rifqiananda.storyapp.networking.ApiRetrofit
+import com.rifqiananda.storyapp.ui.view.RegisterViewModel
+import com.rifqiananda.storyapp.ui.view.UploadViewModel
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -43,11 +46,14 @@ class CreateStoryActivity : AppCompatActivity() {
 
     private var isBackCamera by Delegates.notNull<Boolean>()
 
+    private lateinit var viewModel: UploadViewModel
+
     companion object {
         const val CAMERA_X_RESULT = 200
         private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -61,6 +67,7 @@ class CreateStoryActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
@@ -83,11 +90,11 @@ class CreateStoryActivity : AppCompatActivity() {
         }
 
         binding.cameraXButton.setOnClickListener { startCameraX() }
+        binding.galleryButton.setOnClickListener { startGallery() }
         binding.uploadButton.setOnClickListener {
             loading.startLoading()
             uploadImage()
         }
-        binding.galleryButton.setOnClickListener { startGallery() }
     }
 
 
@@ -138,16 +145,16 @@ class CreateStoryActivity : AppCompatActivity() {
 
         if (getFile != null) {
 
-            if(binding.etDesc.text.toString().isEmpty()){
+            if (binding.etDesc.text.toString().isEmpty()) {
                 loading.isDismiss()
                 showMessage("Isi Deskripsi terlebih dahulu")
 
-            }
-            else {
+            } else {
 
                 val file = getFile as File
 
-                val description = binding.etDesc.text.toString().toRequestBody("text/plain".toMediaType())
+                val description =
+                    binding.etDesc.text.toString().toRequestBody("text/plain".toMediaType())
                 val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
                 val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
                     "photo",
@@ -157,30 +164,20 @@ class CreateStoryActivity : AppCompatActivity() {
                 val token = sharedPref.getString(Constant.PREF_TOKEN)
                 val fixToken = "Bearer $token"
 
-                api.uploadImage(fixToken, imageMultipart, description).enqueue(object : Callback<FileUploadResponse> {
-                    override fun onResponse(
-                        call: Call<FileUploadResponse>,
-                        response: Response<FileUploadResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            loading.isDismiss()
-                            val responseBody = response.body()
-                            if (responseBody != null && !responseBody.error) {
-                                showMessage(responseBody.message)
-                                finish()
-                            }
-                        } else {
-                            loading.isDismiss()
-                            showMessage(response.message())
-                        }
-
-                    }
-
-                    override fun onFailure(call: Call<FileUploadResponse>, t: Throwable) {
+                viewModel = ViewModelProvider(
+                    this,
+                    ViewModelProvider.NewInstanceFactory()
+                )[UploadViewModel::class.java]
+                viewModel.upload(fixToken, imageMultipart, description).observe(this) {
+                    if (!it.error) {
                         loading.isDismiss()
-                        showMessage("Gagal instance Retrofit")
+                        val responseBody = it
+                        if (responseBody != null) {
+                            showMessage(responseBody.message)
+                            finish()
+                        }
                     }
-                })
+                }
             }
 
         } else {

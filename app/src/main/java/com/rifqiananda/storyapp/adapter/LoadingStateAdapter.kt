@@ -19,7 +19,7 @@ class LoadingStateAdapter(private val retry: () -> Unit) : LoadStateAdapter<Load
     }
 
     override fun onBindViewHolder(holder: LoadingStateViewHolder, loadState: LoadState) {
-        TODO("Not yet implemented")
+        holder.bind(loadState)
     }
 
     class LoadingStateViewHolder(private val binding: ItemLoadingBinding, retry: () -> Unit) :

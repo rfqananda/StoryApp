@@ -3,6 +3,7 @@ package com.rifqiananda.storyapp.helper
 import android.content.Context
 import android.content.SharedPreferences
 
+
 class PreferencesHelper (context: Context){
 
     private val PREFS_NAME = "sharedpreprefkotlin123"

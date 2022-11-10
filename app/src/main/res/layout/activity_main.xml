@@ -41,10 +41,10 @@
                 android:src="@drawable/ic_story_app" />
 
             <ImageButton
-                android:id="@+id/btn_create"
+                android:id="@+id/btn_map"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_add"
+                android:src="@drawable/ic_map"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
@@ -75,6 +75,20 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/tool_bar"
             tools:listitem="@layout/layout_adapter" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_create"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="center"
+            app:fabCustomSize="50dp"
+            android:backgroundTint="@color/blue"
+            app:tint="@color/white"
+            android:src="@drawable/ic_add"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

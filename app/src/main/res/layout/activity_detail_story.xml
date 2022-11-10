@@ -43,8 +43,8 @@
         android:id="@+id/view_center"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/iv_photo"
+        app:layout_constraintTop_toBottomOf="@id/view_bg" />
 
     <ImageView
         android:id="@+id/iv_photo"
@@ -60,24 +60,7 @@
         android:src="@drawable/img_login"
         android:transitionName="photo"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_detail"
-        app:shapeAppearanceOverlay="@style/roundedAllCorners" />
-
-    <android.widget.Button
-        android:id="@+id/btn_photo"
-        android:layout_width="140dp"
-        android:layout_height="50dp"
-        android:background="@drawable/bg_button"
-        android:elevation="20dp"
-        android:fontFamily="@font/bold"
-        android:text="See Photo"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_photo"
-        app:layout_constraintEnd_toEndOf="@id/iv_photo"
-        app:layout_constraintStart_toStartOf="@id/iv_photo"
-        app:layout_constraintTop_toBottomOf="@id/iv_photo" />
+        app:layout_constraintTop_toBottomOf="@id/tv_detail" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -90,7 +73,7 @@
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="20dp"
         app:cardElevation="6dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_photo"
+        app:layout_constraintBottom_toBottomOf="@id/iv_photo"
         app:layout_constraintEnd_toEndOf="@id/iv_photo"
         app:layout_constraintStart_toStartOf="@id/iv_photo"
         app:layout_constraintTop_toBottomOf="@id/view_center">

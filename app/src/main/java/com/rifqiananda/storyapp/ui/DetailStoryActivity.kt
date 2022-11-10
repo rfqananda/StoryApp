@@ -52,7 +52,7 @@ class DetailStoryActivity : AppCompatActivity() {
 
             tvDate.text = "$date • $time"
 
-            btnPhoto.setOnClickListener {
+            ivPhoto.setOnClickListener {
                 seePhoto.showPhoto(intent.getStringExtra(USER_PHOTO)!!)
             }
 

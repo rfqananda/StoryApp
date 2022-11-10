@@ -2,6 +2,7 @@ package com.rifqiananda.storyapp.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -13,11 +14,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rifqiananda.storyapp.R
 import com.rifqiananda.storyapp.adapter.LoadingStateAdapter
-import com.rifqiananda.storyapp.adapter.StoriesAdapter
 import com.rifqiananda.storyapp.adapter.StoryListAdapter
 import com.rifqiananda.storyapp.databinding.ActivityMainBinding
 import com.rifqiananda.storyapp.helper.Constant
@@ -25,6 +24,7 @@ import com.rifqiananda.storyapp.helper.PreferencesHelper
 import com.rifqiananda.storyapp.model.Story
 import com.rifqiananda.storyapp.ui.view.StoriesViewModel
 import com.rifqiananda.storyapp.ui.view.ViewModelFactory
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var toggle: ActionBarDrawerToggle
 
+    private var recyclerViewState: Parcelable? = null
+
     private val viewModel: StoriesViewModel by viewModels {
         ViewModelFactory(this)
     }
@@ -42,7 +44,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        getData()
+//        getData()
+        dataAdapter.refresh()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,13 +81,23 @@ class MainActivity : AppCompatActivity() {
             btnCreate.setOnClickListener {
                 startActivity(Intent(this@MainActivity, CreateStoryActivity::class.java))
             }
+
+            btnMap.setOnClickListener {
+                startActivity(Intent(this@MainActivity, MapsActivity::class.java))
+                val token = sharedPref.getString(Constant.PREF_TOKEN)
+                Log.e("token:", token.toString())
+            }
         }
         setupListStories()
     }
 
     private fun getData() {
         viewModel.story.observe(this) {
-            dataAdapter.submitData(lifecycle, it)
+            dataNotShowUp(true)
+            if (it != null) {
+                dataNotShowUp(false)
+                dataAdapter.submitData(lifecycle, it)
+            }
         }
 
 //        val name = sharedPref.getString(Constant.PREF_NAME)
@@ -122,9 +135,15 @@ class MainActivity : AppCompatActivity() {
         )
         binding.rvData.layoutManager = LinearLayoutManager(applicationContext)
         binding.rvData.setHasFixedSize(true)
+        binding.rvData.smoothScrollToPosition(0)
 
         viewModel.story.observe(this) {
-            dataAdapter.submitData(lifecycle, it)
+            dataNotShowUp(true)
+            if (it != null) {
+                dataNotShowUp(false)
+                dataAdapter.submitData(lifecycle, it)
+                dataAdapter.notifyItemRangeChanged(0, dataAdapter.itemCount)
+            }
         }
     }
 

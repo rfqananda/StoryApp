@@ -12,14 +12,19 @@ interface ApiEndPoint {
     suspend fun getAllStories(
         @Header("Authorization") token : String,
         @Query("page") page: Int,
-        @Query("size") size: Int): List<Story>
+        @Query("size") size: Int): GetStories
+
+    @GET("stories")
+    fun getStoriesMap(
+        @Header("Authorization") token : String,
+        @Query("location") location: Int) : Call<GetStories>
 
     @FormUrlEncoded
     @POST("register")
     fun createAccount(
         @Field("name") name: String,
         @Field("email") email: String,
-        @Field("password") password: String) : Call<Submit>
+        @Field("password") password: String) : Call<Register>
 
     @FormUrlEncoded
     @POST("login")

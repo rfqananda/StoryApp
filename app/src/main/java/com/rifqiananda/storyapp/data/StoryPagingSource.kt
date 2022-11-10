@@ -25,9 +25,9 @@ class StoryPagingSource (private val apiService: ApiEndPoint, private val mCtx: 
             val position = params.key ?: INITIAL_PAGE_INDEX
             val responseData = apiService.getAllStories(bearer, position, params.loadSize)
             LoadResult.Page(
-                data = responseData,
-                prevKey = if (position == INITIAL_PAGE_INDEX) null else position - 1,
-                nextKey = if (responseData.isNullOrEmpty()) null else position + 1
+                data = responseData.listStory,
+                prevKey = if (position == 1) null else position - 1,
+                nextKey = if (responseData.listStory.isNullOrEmpty()) null else position + 1
             )
         } catch (exception: Exception) {
             return LoadResult.Error(exception)

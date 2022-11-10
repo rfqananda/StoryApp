@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="20dp"
@@ -14,28 +13,26 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="144dp"
+        android:layout_height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.imageview.ShapeableImageView
+        <ImageView
             android:id="@+id/iv_photo"
-            android:layout_width="144dp"
-            android:layout_height="144dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:scaleType="centerCrop"
             android:src="@drawable/img_register"
             android:transitionName="photo"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/roundedRightCorners" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:ellipsize="end"
             android:fontFamily="@font/bold"
@@ -44,51 +41,36 @@
             android:textAllCaps="true"
             android:textColor="@color/blue"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_date"
+            app:layout_constraintEnd_toStartOf="@id/iv_arrow"
             app:layout_constraintStart_toEndOf="@id/iv_photo"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/regular"
-            android:maxLines="2"
-            android:text="Ini adalah gambar dari sebuah arti dari yang namanya"
-            android:textColor="@color/text_color"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_photo"
-            app:layout_constraintTop_toBottomOf="@id/tv_name" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:fontFamily="@font/medium"
             android:text="23 Oktober 2022"
-            android:gravity="center"
             android:textColor="@color/date_color"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@id/iv_photo"
-            app:layout_constraintEnd_toStartOf="@id/btn_detail"
-            app:layout_constraintTop_toTopOf="@id/btn_detail"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <android.widget.Button
-            android:id="@+id/btn_detail"
-            android:layout_width="85dp"
-            android:layout_height="34dp"
-            android:background="@drawable/bg_button_card"
-            android:fontFamily="@font/bold"
-            android:text="Detail"
-            android:textColor="@color/white"
-            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/iv_arrow"
+            app:layout_constraintStart_toEndOf="@id/iv_photo"
+            app:layout_constraintTop_toBottomOf="@id/tv_name" />
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
